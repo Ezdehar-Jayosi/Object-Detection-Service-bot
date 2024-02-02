@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: polybot-service
+  namespace: ezdeharj
+spec:
+  selector:
+    app: polybot-microservice
+  ports:
+    - protocol: TCP
+      port: 8443
+      targetPort: 8443

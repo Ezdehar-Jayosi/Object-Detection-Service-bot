@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yolo5-deployment
+  namespace: ezdeharj
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yolo5-microservice
+  template:
+    metadata:
+      labels:
+        app: yolo5-microservice
+    spec:
+      containers:
+      - name: yolo5-container
+        image: 933060838752.dkr.ecr.us-east-1.amazonaws.com/ezdehar-yolo5-img:latest
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "50Mi"
+            cpu: "30m"
+          limits:
+            memory: "100Mi"
+            cpu: "80m"
