@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: polybot-ingress
+  namespace: ezdeharj
+  annotations:
+    nnginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  tls:
+    - hosts:
+        - ezdehar-alb-57890755.eu-west-3.elb.amazonaws.com
+      secretName: polybot-tls-secret
+  rules:
+    - host: yezdehar-alb-57890755.eu-west-3.elb.amazonaws.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: polybot-service
+                port:
+                  number: 8443
