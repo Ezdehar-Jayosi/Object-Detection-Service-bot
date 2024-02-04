@@ -18,6 +18,7 @@ spec:
         image: 933060838752.dkr.ecr.us-east-1.amazonaws.com/ezdehar-polybot-img:latest
         ports:
         - containerPort: 8443
+
         resources:
           requests:
             memory: "50Mi"

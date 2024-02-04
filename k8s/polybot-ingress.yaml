@@ -3,22 +3,23 @@ kind: Ingress
 metadata:
   name: polybot-ingress
   namespace: ezdeharj
-  annotations:
-    nnginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  labels:
+    env: dev
+    release: v1.0
 spec:
   tls:
-    - hosts:
-        - ezdehar-alb-57890755.eu-west-3.elb.amazonaws.com
-      secretName: polybot-tls-secret
+  - hosts:
+    - ezdeharbot.atech-bot.click
+    secretName: polybot-tls-secret
   rules:
-    - host: yezdehar-alb-57890755.eu-west-3.elb.amazonaws.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: polybot-service
-                port:
-                  number: 8443
+  - host: ezdeharbot.atech-bot.click
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: polybot-service
+            port:
+              number: 8443
+  ingressClassName: nginx

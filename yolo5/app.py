@@ -24,7 +24,7 @@ secrets = get_secret('ezdehar-secret')
 
 images_bucket = secrets['BUCKET_NAME']
 queue_name = secrets['SQS_QUEUE_NAME']
-polybot_url = 'https://ezdehar-alb-57890755.eu-west-3.elb.amazonaws.com/results/'  # Replace with the actual ALB URL of Polybot
+polybot_url = 'https://ezdeharbot.atech-bot.click/results/'  # Replace with the actual ALB URL of Polybot
 
 sqs_client = boto3.client('sqs', region_name='eu-west-3')
 
@@ -100,9 +100,11 @@ def consume():
                 }
 
                 # Store the prediction_summary in a DynamoDB table
+                print("Store the prediction_summary in a DynamoDB table")
                 store_in_dynamodb(prediction_summary)
 
                 # Perform a GET request to Polybot's /results endpoint
+                print("Perform a GET request to Polybot's /results endpoint")
                 send_results_to_polybot(prediction_summary)
 
             # Delete the message from the queue as the job is considered as DONE
