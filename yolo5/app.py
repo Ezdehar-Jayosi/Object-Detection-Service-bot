@@ -104,7 +104,7 @@ def consume():
                 store_in_dynamodb(prediction_summary)
 
                 # Perform a GET request to Polybot's /results endpoint
-                print("Perform a GET request to Polybot's /results endpoint")
+                print("Perform a GET request to Polybot's         /results endpoint")
                 send_results_to_polybot(prediction_summary)
 
             # Delete the message from the queue as the job is considered as DONE
