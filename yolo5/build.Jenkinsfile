@@ -41,6 +41,10 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
+                  withCredentials([
+                        string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
+                        string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY')
+                    ]) {
                     // Use the kubectl command from the configured kubeconfig
                     sh "kubectl --kubeconfig=${KUBE_CONFIG_CRED} config use-context ${CLUSTER_NAME}"
 
@@ -55,6 +59,7 @@ pipeline {
 
                     // Clean up backup file created by sed
                     sh "rm yolo5-deployment.yaml.bak"
+                    }
                 }
             }
         }
