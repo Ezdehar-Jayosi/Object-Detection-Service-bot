@@ -13,14 +13,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Source Code') {
-            steps {
-                script {
-                    // Checkout the source code, replace this with your repository URL
-                    checkout scm
-                }
-            }
-        }
 
         stage('Authenticate with ECR') {
             steps {
@@ -37,15 +29,14 @@ pipeline {
             }
         }
 
-        stage('Build and Push Yolo5') {
-            steps {
-                script {
-                    // Build and push the Docker image for yolo5
-                    docker.build("${ECR_REPOSITORY}/ezdehar-yolo5-img:${IMAGE_TAG}", ' .')
-                    docker.image("${ECR_REPOSITORY}/ezdehar-yolo5-img:${IMAGE_TAG}").push()
-                }
+          stage('Build and Push Yolo5') {
+        steps {
+            script {
+                def dockerImage = docker.build("${ECR_REPOSITORY}/ezdehar-yolo5-img:${IMAGE_TAG}", '.')
+                dockerImage.push()
             }
         }
+    }
 
         stage('Deploy to Kubernetes') {
             steps {
