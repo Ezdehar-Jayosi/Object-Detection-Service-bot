@@ -7,7 +7,7 @@ pipeline {
         ECR_REPOSITORY = '933060838752.dkr.ecr.us-east-1.amazonaws.com'
         ACCOUNT_ID = '933060838752'
         KUBE_CONFIG_CRED = 'KUBE_CONFIG_CRED'
-        CLUSTER_NAME = "k8s-main"
+        CLUSTER_NAME = "arn:aws:eks:us-east-1:933060838752:cluster/k8s-main"
         CLUSTER_REGION = "us-east-1"
         NAMESPACE = "ezdeharj"
     }
@@ -16,7 +16,6 @@ pipeline {
         stage('Authenticate with ECR') {
             steps {
                 script {
-                    // Use withCredentials to securely pass AWS credentials
                     withCredentials([
                         string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
                         string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY')
@@ -43,7 +42,7 @@ pipeline {
                     withCredentials([
                         string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
                         string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
-                        file(credentialsId: 'KUBE_CONFIG_CRED', variable: 'KUBE_CONFIG_CRED')
+                        file(credentialsId: 'KUBE_CONFIG_CRED', variable: 'KUBECONFIG')
                     ]) {
                         // Use the kubectl command from the configured kubeconfig
                         sh "kubectl --kubeconfig=${KUBE_CONFIG_CRED} config use-context ${CLUSTER_NAME}"
