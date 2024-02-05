@@ -45,7 +45,7 @@ pipeline {
                         string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
                     ]) {
 
-=                            sh 'aws eks update-kubeconfig --region ${CLUSTER_REGION} --name ${CLUSTER_NAME}'
+                          sh 'aws eks update-kubeconfig --region ${CLUSTER_REGION} --name ${CLUSTER_NAME}'
                             sh "sed -i 's|image: .*|image: ${ECR_REGISTRY}/ezdehar-yolo5-img:${IMAGE_TAG}|' yolo5-deployment.yaml"
                             sh 'kubectl apply -f yolo5-deployment.yaml'
 
