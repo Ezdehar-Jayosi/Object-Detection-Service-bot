@@ -32,7 +32,7 @@ pipeline {
           stage('Build and Push Yolo5') {
         steps {
             script {
-                def dockerImage = docker.build("${ECR_REPOSITORY}/ezdehar-yolo5-img:${IMAGE_TAG}", '.')
+                def dockerImage = docker.build("${ECR_REPOSITORY}/ezdehar-yolo5-img:${IMAGE_TAG}", './yolo5')
                 dockerImage.push()
             }
         }
