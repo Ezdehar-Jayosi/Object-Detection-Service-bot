@@ -42,7 +42,7 @@ pipeline {
                      withCredentials([
                         string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
                         string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
-                        file(credentialsId: 'KUBE_CONFIG_CRED', variable: 'KUBECONFIG')
+                        file(credentialsId: 'KUBE_CONFIG_CRED', variable: 'KUBECONFIG','/home/ezdehar/.kube/config')
                     ]) {
                             sh 'aws configure list'
                             sh 'aws eks update-kubeconfig --region ${CLUSTER_REGION} --name ${CLUSTER_NAME}'
