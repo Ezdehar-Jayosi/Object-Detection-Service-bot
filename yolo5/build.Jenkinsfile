@@ -50,7 +50,7 @@ pipeline {
                             withCredentials([
                 file(credentialsId: 'KUBE_CONFIG_CRED', variable: 'KUBECONFIG')
             ]) {
-                sh 'kubectl apply -f k8s/yolo5-deployment.yaml'
+                sh 'kubectl apply -f /k8s/yolo5-deployment.yaml'
             }
 
                     }
