@@ -9,6 +9,7 @@ spec:
   source:
     repoURL: https://github.com/Ezdehar-Jayosi/Object-Detection-Service-bot
     targetRevision: HEAD  # Corrected field name
+    path: k8s  # Specify the path to your Kubernetes manifests within the repository
 
   destination:
     server: https://kubernetes.default.svc
