@@ -44,6 +44,10 @@ pipeline {
                         string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
                         file(credentialsId: 'KUBE_CONFIG_CRED', variable: 'KUBECONFIG')
                     ]) {
+                            sh 'echo "Current working directory: ${pwd()}"'
+                            sh 'echo "Current user: ${sh(script: 'whoami', returnStdout: true).trim()}"
+
+
                             sh 'aws configure list'
                             sh 'aws eks update-kubeconfig --region ${CLUSTER_REGION} --name ${CLUSTER_NAME}'
                             sh "sed -i 's|image: .*|image: ${ECR_REGISTRY}/ezdehar-yolo5-img:${IMAGE_TAG}|' yolo5-deployment.yaml"
