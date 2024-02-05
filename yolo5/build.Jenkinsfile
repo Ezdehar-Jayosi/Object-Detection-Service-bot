@@ -43,15 +43,11 @@ pipeline {
                      withCredentials([
                         string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
                         string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
-                        file(credentialsId: 'KUBE_CONFIG_CRED', variable: 'KUBECONFIG')
                     ]) {
 
-                            sh 'aws configure list'
-                            sh 'aws eks update-kubeconfig --region ${CLUSTER_REGION} --name ${CLUSTER_NAME}'
+=                            sh 'aws eks update-kubeconfig --region ${CLUSTER_REGION} --name ${CLUSTER_NAME}'
                             sh "sed -i 's|image: .*|image: ${ECR_REGISTRY}/ezdehar-yolo5-img:${IMAGE_TAG}|' yolo5-deployment.yaml"
                             sh 'kubectl apply -f yolo5-deployment.yaml'
-                            // Stash the deployment file
-                            //stash includes: 'lana-bot-deployment.yaml', name: 'deploymentFile'
 
                     }
                 }
