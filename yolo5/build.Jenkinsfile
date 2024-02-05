@@ -44,9 +44,12 @@ pipeline {
                         sh "sed -i 's|image: .*|image: ${ECR_REPOSITORY}/ezdehar-yolo5-img:${IMAGE_TAG}|' k8s/yolo5-deployment.yaml"
                         sh 'git config user.email "ezdeharj.95@gmail.com"'
                         sh 'git config user.name "Ezdehar-Jayosi"'
+                        //sh 'git add k8s/yolo5-deployment.yaml'
+                        //sh 'git commit -m "Update image tag "'
+                        //sh 'git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/Ezdehar-Jayosi/Object-Detection-Service-bot.git'
                         sh 'git add k8s/yolo5-deployment.yaml'
-                        sh 'git commit -m "Update image tag "'
-                        sh 'git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/Ezdehar-Jayosi/Object-Detection-Service-bot.git'
+                        sh 'git diff --cached --exit-code || git commit -m "Update image tag " && git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/Ezdehar-Jayosi/Object-Detection-Service-bot.git'
+
                     }
                 }
             } catch (Exception e) {
