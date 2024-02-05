@@ -41,10 +41,10 @@ pipeline {
             try {
                 dir("${env.WORKSPACE}") {
                     withCredentials([usernamePassword(credentialsId: 'github', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                        sh "sed -i 's|image: .*|image: ${ECR_REPOSITORY}/ezdehar-yolo5-img:${IMAGE_TAG}|' yolo5-deployment.yaml"
+                        sh "sed -i 's|image: .*|image: ${ECR_REPOSITORY}/ezdehar-yolo5-img:${IMAGE_TAG}|' k8s/yolo5-deployment.yaml"
                         sh 'git config user.email "ezdeharj.95@gmail.com"'
                         sh 'git config user.name "Ezdehar-Jayosi"'
-                        sh 'git add yolo5-deployment.yaml'
+                        sh 'git add k8s/yolo5-deployment.yaml'
                         sh 'git commit -m "Update image tag "'
                         sh 'git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/Ezdehar-Jayosi/Object-Detection-Service-bot/tree/main/k8s argo-releases'
                     }
