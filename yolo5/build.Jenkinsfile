@@ -36,31 +36,28 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    withCredentials([
-                        string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
-                        string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
-                        file(credentialsId: 'KUBE_CONFIG_CRED', variable: 'KUBECONFIG')
-                    ]) {
-                        // Use the kubectl command from the configured kubeconfig
-                        sh "kubectl --kubeconfig=${KUBE_CONFIG_CRED} config use-context ${CLUSTER_NAME}"
+      stage('Deploy to Kubernetes') {
+    steps {
+        script {
+            withCredentials([
+                string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
+                string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
+                file(credentialsId: 'KUBE_CONFIG_CRED', variable: 'KUBECONFIG')
+            ]) {
+                // Print the content of the kubeconfig file for debugging
+                sh "cat ${KUBECONFIG}"
 
-                        // Get the latest image tag from ECR for yolo5
-                        def latestImageTagYolo5 = sh(script: "aws ecr describe-images --region ${CLUSTER_REGION} --repository-name ezdehar-yolo5-img --query 'images[].imageTags' --output text | tr -s '\t' '\n' | sort -r | head -n 1", returnStdout: true).trim()
+                // Confirm the existence and content of the kubeconfig file
+                sh "ls -l ${KUBECONFIG}"
 
-                        // Update the Kubernetes manifest with the latest image tag for yolo5
-                        sh "sed -i.bak 's|image: ${ECR_REPOSITORY}/ezdehar-yolo5-img:latest|image: ${ECR_REPOSITORY}/ezdehar-yolo5-img:${latestImageTagYolo5}|' yolo5-deployment.yaml"
+                // Use the kubectl command from the configured kubeconfig
+                sh "kubectl --kubeconfig=${KUBECONFIG} config use-context k8s-main"
 
-                        // Deploy to Kubernetes in the specified namespace
-                        sh "kubectl --kubeconfig=${KUBE_CONFIG_CRED} apply -f yolo5-deployment.yaml -n ${NAMESPACE}"
-
-                        // Clean up backup file created by sed
-                        sh "rm yolo5-deployment.yaml.bak"
-                    }
-                }
+                // Rest of your deployment steps
             }
         }
+    }
+}
+
     }
 }
