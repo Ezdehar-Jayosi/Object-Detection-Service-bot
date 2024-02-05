@@ -7,7 +7,7 @@ pipeline {
         ECR_REPOSITORY = '933060838752.dkr.ecr.us-east-1.amazonaws.com'
         ACCOUNT_ID = '933060838752'
         KUBE_CONFIG_CRED = 'KUBE_CONFIG_CRED'
-        CLUSTER_NAME = "arn:aws:eks:us-east-1:933060838752:cluster/k8s-main"
+        CLUSTER_NAME = "k8s-main"  // Corrected cluster name
         CLUSTER_REGION = "us-east-1"
         NAMESPACE = "ezdeharj"
     }
