@@ -47,7 +47,7 @@ pipeline {
                         sh 'git config user.name "Ezdehar-Jayosi"'
                         sh 'git add k8s/polybot-deployment.yaml'
                         sh 'git commit -m "Update image tag "'
-                        sh 'git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/Ezdehar-Jayosi/Object-Detection-Service-bot/tree/main/k8s '
+                        sh 'git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/Ezdehar-Jayosi/Object-Detection-Service-bot/k8s.git HEAD:main '
                     }
                 }
             } catch (Exception e) {
