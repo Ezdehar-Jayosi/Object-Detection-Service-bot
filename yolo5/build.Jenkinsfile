@@ -47,7 +47,7 @@ pipeline {
                     ]) {
                     // Use the kubectl command from the configured kubeconfig
                     sh "kubectl --kubeconfig=${KUBE_CONFIG_CRED} config use-context ${CLUSTER_NAME}"
-
+                    withCredentials([file(credentialsId: 'KUBE_CONFIG_CRED', variable: 'KUBECONFIG')]) {
                     // Get the latest image tag from ECR for yolo5
                     def latestImageTagYolo5 = sh(script: "aws ecr describe-images --region ${CLUSTER_REGION} --repository-name ezdehar-yolo5-img --query 'images[].imageTags' --output text | tr -s '\t' '\n' | sort -r | head -n 1", returnStdout: true).trim()
 
@@ -59,6 +59,7 @@ pipeline {
 
                     // Clean up backup file created by sed
                     sh "rm yolo5-deployment.yaml.bak"
+                    }
                     }
                 }
             }
