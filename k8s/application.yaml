@@ -8,12 +8,11 @@ spec:
 
   source:
     repoURL: https://github.com/Ezdehar-Jayosi/Object-Detection-Service-bot
-    targetValue: HEAD
+    targetRevision: HEAD  # Corrected field name
 
   destination:
     server: https://kubernetes.default.svc
     namespace: ezdeharj
-
 
 syncPolicy:
   automated:
