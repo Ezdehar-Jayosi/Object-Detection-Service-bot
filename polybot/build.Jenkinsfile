@@ -37,19 +37,26 @@ pipeline {
         }
 
         stage('Deploy Polybot') {
-            steps {
-                script {
-                    HOME = "${env.WORKSPACE}"
-                    withCredentials([
-                        string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
-                        string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
-                    ]) {
-                        sh 'aws eks update-kubeconfig --region ${CLUSTER_REGION} --name ${CLUSTER_NAME}'
-                        sh "sed -i 's|image: .*|image: ${ECR_REPOSITORY}/ezdehar-polybot-img:${IMAGE_TAG}|' k8s/polybot-deployment.yaml"
-                        sh 'kubectl apply -f k8s/polybot-deployment.yaml'
+    steps {
+        script {
+            try {
+                dir("${env.WORKSPACE}") {
+                    withCredentials([usernamePassword(credentialsId: 'GIT_CREDENTIALS_ID', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                        sh "sed -i 's|image: .*|image: ${ECR_REGISTRY}/ezdehar-polybot-img:${IMAGE_TAG}|' polybot-deployment.yaml"
+                        sh 'git config user.email "ezdeharj.95@gmail.com"'
+                        sh 'git config user.name "Ezdehar-Jayosi"'
+                        sh 'git add polybot-deployment.yaml'
+                        sh 'git commit -m "Update image tag "'
+                        sh 'git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/Ezdehar-Jayosi/Object-Detection-Service-bot/tree/main/k8s argo-releases'
                     }
                 }
+            } catch (Exception e) {
+                currentBuild.result = 'FAILURE'
+                error("Failed to deploy Polybot: ${e.message}")
             }
         }
+    }
+}
+
     }
 }
