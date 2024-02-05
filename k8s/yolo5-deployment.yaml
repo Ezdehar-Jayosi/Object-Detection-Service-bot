@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: yolo5-container
-        image: 933060838752.dkr.ecr.us-east-1.amazonaws.com/ezdehar-yolo5-img:v96-96-1707176481508
+        image: 933060838752.dkr.ecr.us-east-1.amazonaws.com/ezdehar-yolo5-img:v97-97-1707176501515
         ports:
         - containerPort: 80
         resources:
