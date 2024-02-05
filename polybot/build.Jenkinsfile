@@ -42,7 +42,7 @@ pipeline {
             try {
                 dir("${env.WORKSPACE}") {
                     withCredentials([usernamePassword(credentialsId: 'github', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                        sh "sed -i 's|image: .*|image: ${ECR_REGISTRY}/ezdehar-polybot-img:${IMAGE_TAG}|' polybot-deployment.yaml"
+                        sh "sed -i 's|image: .*|image: ${ECR_REPOSITORY}/ezdehar-polybot-img:${IMAGE_TAG}|' polybot-deployment.yaml"
                         sh 'git config user.email "ezdeharj.95@gmail.com"'
                         sh 'git config user.name "Ezdehar-Jayosi"'
                         sh 'git add polybot-deployment.yaml'
