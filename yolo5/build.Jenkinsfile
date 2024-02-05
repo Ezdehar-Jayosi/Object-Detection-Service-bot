@@ -52,6 +52,7 @@ pipeline {
 
                 // Use the kubectl command from the configured kubeconfig
                 sh "kubectl --kubeconfig=${KUBECONFIG} config use-context k8s-main"
+                sh "kubectl --kubeconfig=${KUBECONFIG} config view"
 
                 // Rest of your deployment steps
             }
