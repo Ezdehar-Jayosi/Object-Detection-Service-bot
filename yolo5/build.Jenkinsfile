@@ -6,7 +6,6 @@ pipeline {
         AWS_REGION = "us-east-1"
         ECR_REPOSITORY = '933060838752.dkr.ecr.us-east-1.amazonaws.com'
         ACCOUNT_ID = '933060838752'
-        KUBE_CONFIG_CRED = 'KUBE_CONFIG_CRED'
         CLUSTER_NAME = "k8s-main"  // Corrected cluster name
         CLUSTER_REGION = "us-east-1"
         NAMESPACE = "ezdeharj"
@@ -46,8 +45,8 @@ pipeline {
                     ]) {
 
                            sh 'aws eks update-kubeconfig --region ${CLUSTER_REGION} --name ${CLUSTER_NAME}'
-                            sh "sed -i 's|image: .*|image: ${ECR_REPOSITORY}/ezdehar-yolo5-img:${IMAGE_TAG}|' yolo5-deployment.yaml"
-                            sh 'kubectl apply -f yolo5-deployment.yaml'
+                            sh "sed -i 's|image: .*|image: ${ECR_REPOSITORY}/ezdehar-yolo5-img:${IMAGE_TAG}|' k8s/yolo5-deployment.yaml"
+                            sh 'kubectl apply -f k8s/yolo5-deployment.yaml'
 
                     }
                 }
