@@ -64,7 +64,7 @@ def setup_routes():
             text_results = format_prediction_results(result_item)
 
             bot.send_text(chat_id, text_results)
-            bot.send_text(chat_id, text_results)
+            #bot.send_text(chat_id, text_results)
             return 'Results sent successfully'
 
         except ClientError as dynamodb_error:
