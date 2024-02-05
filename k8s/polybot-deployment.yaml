@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: polybot-container
-        image: 933060838752.dkr.ecr.us-east-1.amazonaws.com/ezdehar-polybot-img:v32-32-1707176036457
+        image: 933060838752.dkr.ecr.us-east-1.amazonaws.com/ezdehar-polybot-img:v34-34-1707176071461
         ports:
         - containerPort: 8443
 
