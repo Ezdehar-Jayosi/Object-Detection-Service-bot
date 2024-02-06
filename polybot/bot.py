@@ -1,12 +1,11 @@
 import telebot
 from loguru import logger
-import time
-from telebot.types import InputFile
-import flask
-from flask import request
 import os
+import time
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 import boto3
 import json
+
 class Bot:
 
     def __init__(self, token, telegram_chat_url):
@@ -25,8 +24,8 @@ class Bot:
 
         logger.info(f'Telegram Bot information\n\n{self.telegram_bot_client.get_me()}')
 
-    def send_text(self, chat_id, text):
-        self.telegram_bot_client.send_message(chat_id, text)
+    def send_text(self, chat_id, text, reply_markup=None):
+        self.telegram_bot_client.send_message(chat_id, text, reply_markup=reply_markup)
         logger.info(f'Sent text message to chat_id {chat_id}: {text}')
 
     def send_text_with_quote(self, chat_id, text, quoted_msg_id):
@@ -99,6 +98,9 @@ class ObjectDetectionBot(Bot):
                 self.send_text(chat_id, "👍 Great! I received a photo. Analyzing... 🔍")
                 img_path = self.download_user_photo(msg)
 
+                # Call YOLOv5 for prediction here
+                predicted_objects = self.predict_objects(img_path)
+
                 # Upload the photo to S3
                 s3_key = f'photos/{os.path.basename(img_path)}'
                 self.upload_to_s3(img_path, s3_key)
@@ -112,6 +114,10 @@ class ObjectDetectionBot(Bot):
 
                 # Send a message to the Telegram end-user
                 self.send_text(chat_id, '🤖 Your image is being processed. Please wait... ⏳')
+
+                # Ask for feedback after prediction
+                self.ask_for_feedback(chat_id)
+
             else:
                 self.send_text(chat_id, "🚫 I can only process photos. Please send me a photo. 📷")
         except Exception as e:
@@ -124,12 +130,14 @@ class ObjectDetectionBot(Bot):
         finally:
             logger.info('Exiting handle_message.')
 
-        # After handling the initial processing, ask for feedback
-        self.ask_for_feedback(chat_id)
-
     def ask_for_feedback(self, chat_id):
-        # Ask the user if the prediction was successful
-        self.send_text(chat_id, "Was the prediction successful? (Yes/No)")
+        # Ask the user for feedback using clickable buttons
+        keyboard = InlineKeyboardMarkup()
+        keyboard.row(
+            InlineKeyboardButton("Yes ✅", callback_data="feedback_yes"),
+            InlineKeyboardButton("No ❌", callback_data="feedback_no")
+        )
+        self.send_text(chat_id, "Was the prediction successful?", reply_markup=keyboard)
 
     def handle_feedback(self, chat_id, feedback):
         if feedback.lower() == 'no':
@@ -140,31 +148,18 @@ class ObjectDetectionBot(Bot):
             self.send_text(chat_id, "Great! I'm glad the prediction was successful.")
 
     def ask_for_wrong_prediction(self, chat_id):
-        # Ask the user which thing was predicted wrong
+        # Ask the user which object was predicted incorrectly
         self.send_text(chat_id, "Which object was predicted incorrectly?")
 
     def handle_wrong_prediction(self, chat_id, wrong_prediction):
         # Respond with the corrected prediction
         self.send_text(chat_id, f"On second thought, it still looks like a {wrong_prediction}.")
 
+    def predict_objects(self, img_path):
+        # Call YOLOv5 for prediction
+        # Replace this with your YOLOv5 prediction code
+        return ["object1", "object2"]  # Example list of predicted objects
+
     def upload_to_s3(self, img_path, s3_key):
         try:
-            self.s3.upload_file(img_path, self.s3_bucket_name, os.path.basename(s3_key))
-        except Exception as e:
-            logger.error(f'Error uploading to S3: {e}')
-            raise
-        return s3_key
-
-    def send_to_sqs(self, message_body):
-        self.sqs.send_message(QueueUrl=self.sqs_queue_url, MessageBody=message_body)
-
-    @staticmethod
-    def get_secret(value, secrets_manager):
-        try:
-            get_secret_value_response = secrets_manager.get_secret_value(SecretId='ezdehar-secret')
-            return json.loads(get_secret_value_response['SecretString'])[value]
-        except Exception as e:
-            logger.error(f"Error retrieving secret '{value}': {e}")
-            raise
-
-
+            self.s3.upload_file(img_path, self.s
