@@ -115,6 +115,8 @@ class ObjectDetectionBot(Bot):
                 self.send_text(chat_id, '🤖 Your image is being processed. Please wait... ⏳')
             else:
                 self.send_text(chat_id, "🚫 I can only process photos. Please send me a photo. 📷")
+                self.send_text(chat_id, "🚫 I can only process photos. Please send me a photo. 📷")
+
         except Exception as e:
             # Log the exception
             logger.error(f'Error handling message: {e}')
