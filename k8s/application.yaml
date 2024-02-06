@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: detection-app
-  namespace: ezdehar-argocd
+  namespace: ezdehar-argocd-nm
 spec:
   project: default
 
