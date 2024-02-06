@@ -13,23 +13,7 @@ pipeline {
     }
 
     stages {
-     stage('Check yolo5 Changes') {
-            steps {
-                script {
-                    // Check if changes variable is set (indicating changes in polybot directory)
-                    if (env.CHANGES_IN_POLYBOT == 'true') {
-                        // Proceed with building and deploying polybot
-                        buildPolybot()
-                    } else {
-                        // No changes detected in the polybot directory
-                        echo "No changes detected in the polybot directory. Skipping build and deployment."
-                    }
-                }
-            }
-        }
-    }
         stage('Authenticate with ECR') {
-
             steps {
                 script {
                     withCredentials([
@@ -45,9 +29,7 @@ pipeline {
         }
 
         stage('Build and Push Yolo5') {
-
             steps {
-
                 script {
 
                         def dockerImage = docker.build("${ECR_REPOSITORY}/ezdehar-yolo5-img:${IMAGE_TAG}", './yolo5')
@@ -59,7 +41,6 @@ pipeline {
 
      stage('Deploy') {
             steps {
-
                 script {
                 HOME = "${env.WORKSPACE}"
                      withCredentials([
@@ -77,3 +58,4 @@ pipeline {
             }
         }
     }
+}
