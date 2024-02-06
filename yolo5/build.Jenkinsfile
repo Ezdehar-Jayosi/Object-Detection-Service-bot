@@ -1,5 +1,16 @@
 pipeline {
-    // ... (rest of your code)
+    agent any
+
+    environment {
+        IMAGE_TAG = "v${env.BUILD_ID}-${env.BUILD_NUMBER}-${currentBuild.getTimeInMillis()}"
+        AWS_REGION = "us-east-1"
+        ECR_REPOSITORY = '933060838752.dkr.ecr.us-east-1.amazonaws.com'
+        ACCOUNT_ID = '933060838752'
+        KUBE_CONFIG_CRED = 'KUBE_CONFIG_CRED'
+        CLUSTER_NAME = "k8s-main"  // Corrected cluster name
+        CLUSTER_REGION = "us-east-1"
+        NAMESPACE = "ezdeharj"
+    }
 
     stages {
         stage('Authenticate with ECR') {
