@@ -11,6 +11,10 @@ pipeline {
         CLUSTER_REGION = "us-east-1"
         NAMESPACE = "ezdeharj"
     }
+    triggers {
+        // Run the pipeline when changes occur in the current directory
+        changeset('polybot/.*')
+    }
 
     stages {
         stage('Authenticate with ECR') {
