@@ -59,7 +59,7 @@ pipeline {
                         //sh 'git commit -m "Update image tag "'
                         //sh 'git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/Ezdehar-Jayosi/Object-Detection-Service-bot.git'
                         sh 'git add k8s/yolo5-deployment.yaml'
-                        sh 'git diff --cached --exit-code || git commit -m "Update image tag " && git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/Ezdehar-Jayosi/Object-Detection-Service-bot.git'
+                        sh 'git diff --cached --exit-code || git commit -m "Update image tag " && git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/Ezdehar-Jayosi/Object-Detection-Service-bot.git HEAD:main'
                     }
                     }
                 }
