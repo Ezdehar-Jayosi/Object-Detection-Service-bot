@@ -1,11 +1,12 @@
 import telebot
 from loguru import logger
-import os
 import time
 from telebot.types import InputFile
+import flask
+from flask import request
+import os
 import boto3
 import json
-
 class Bot:
 
     def __init__(self, token, telegram_chat_url):
@@ -85,11 +86,9 @@ class ObjectDetectionBot(Bot):
         self.sqs = boto3.client('sqs', region_name='eu-west-3')  # Specify the region here
 
     def handle_message(self, msg):
-
         try:
             logger.info(f'Incoming message: {msg}')
             chat_id = msg['chat']['id']
-            # Welcome message for the first-time user
             if 'new_chat_member' in msg:
                 new_member = msg['new_chat_member']
                 self.send_text(msg['chat']['id'], f'Welcome 😊\n'
@@ -115,7 +114,6 @@ class ObjectDetectionBot(Bot):
                 self.send_text(chat_id, '🤖 Your image is being processed. Please wait... ⏳')
             else:
                 self.send_text(chat_id, "🚫 I can only process photos. Please send me a photo. 📷")
-                #hghghghghjjjjjj
         except Exception as e:
             # Log the exception
             logger.error(f'Error handling message: {e}')
@@ -125,6 +123,29 @@ class ObjectDetectionBot(Bot):
                            'An error occurred while processing your request. Please try again later.')
         finally:
             logger.info('Exiting handle_message.')
+
+        # After handling the initial processing, ask for feedback
+        self.ask_for_feedback(chat_id)
+
+    def ask_for_feedback(self, chat_id):
+        # Ask the user if the prediction was successful
+        self.send_text(chat_id, "Was the prediction successful? (Yes/No)")
+
+    def handle_feedback(self, chat_id, feedback):
+        if feedback.lower() == 'no':
+            # If the prediction was not successful, ask the user what was wrong
+            self.ask_for_wrong_prediction(chat_id)
+        else:
+            # If the prediction was successful, respond with a confirmation message
+            self.send_text(chat_id, "Great! I'm glad the prediction was successful.")
+
+    def ask_for_wrong_prediction(self, chat_id):
+        # Ask the user which thing was predicted wrong
+        self.send_text(chat_id, "Which object was predicted incorrectly?")
+
+    def handle_wrong_prediction(self, chat_id, wrong_prediction):
+        # Respond with the corrected prediction
+        self.send_text(chat_id, f"On second thought, it still looks like a {wrong_prediction}.")
 
     def upload_to_s3(self, img_path, s3_key):
         try:
@@ -145,3 +166,5 @@ class ObjectDetectionBot(Bot):
         except Exception as e:
             logger.error(f"Error retrieving secret '{value}': {e}")
             raise
+
+
