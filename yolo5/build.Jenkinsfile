@@ -39,29 +39,23 @@ pipeline {
             }
         }
 
-        stage('Deploy Polybot') {
+     stage('Deploy') {
             steps {
                 script {
-                    try {
-                        dir("${env.WORKSPACE}") {
-                            withCredentials([usernamePassword(credentialsId: 'github', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                HOME = "${env.WORKSPACE}"
+                     withCredentials([
+                        string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
+                        string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
+                    ]) {
 
-                                    sh "sed -i 's|image: .*|image: ${ECR_REPOSITORY}/ezdehar-yolo5-img:${IMAGE_TAG}|' k8s/yolo5-deployment.yaml"
-                                    sh 'git config user.email "ezdeharj.95@gmail.com"'
-                                    sh 'git config user.name "Ezdehar-Jayosi"'
-                                    sh 'git add k8s/yolo5-deployment.yaml'
-                                    sh 'git commit -m "Update image tag " && git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/Ezdehar-Jayosi/Object-Detection-Service-bot.git HEAD:main'
+                           sh 'aws eks update-kubeconfig --region ${CLUSTER_REGION} --name ${CLUSTER_NAME}'
+                            sh "sed -i 's|image: .*|image: ${ECR_REPOSITORY}/ezdehar-yolo5-img:${IMAGE_TAG}|' k8s/yolo5-deployment.yaml"
+                            sh 'kubectl apply -f k8s/yolo5-deployment.yaml'
 
-                            }
-                        }
-                    } catch (Exception e) {
-                        currentBuild.result = 'FAILURE'
-                        error("Failed to deploy yolo5: ${e.message}")
+
                     }
                 }
             }
         }
     }
-
-
 }

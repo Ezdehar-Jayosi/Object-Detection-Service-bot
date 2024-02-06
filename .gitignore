@@ -1,3 +1,4 @@
 /k8s/get_helm.sh
 /k8s/tls.crt
 /k8s/values.yaml
+/k8s/storage-class.yaml
