@@ -15,7 +15,12 @@ pipeline {
 
     stages {
         stage('Authenticate with ECR') {
+          when {
+                // Condition to trigger deployment only if changes are detected in the polybot directory
+                changeset "**/polybot/*"
+            }
             steps {
+
                 script {
                     withCredentials([
                         string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
@@ -29,6 +34,10 @@ pipeline {
         }
 
         stage('Build and Push Polybot') {
+          when {
+                // Condition to trigger deployment only if changes are detected in the polybot directory
+                changeset "**/polybot/*"
+            }
             steps {
                 script {
                     def dockerImage = docker.build("${ECR_REPOSITORY}/ezdehar-polybot-img:${IMAGE_TAG}", './polybot')
@@ -38,6 +47,10 @@ pipeline {
         }
 
        stage('Deploy Polybot') {
+         when {
+                // Condition to trigger deployment only if changes are detected in the polybot directory
+                changeset "**/polybot/*"
+            }
             steps {
                 script {
 
