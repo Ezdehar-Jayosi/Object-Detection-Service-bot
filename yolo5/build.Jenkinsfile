@@ -11,9 +11,9 @@ pipeline {
         CLUSTER_REGION = "us-east-1"
         NAMESPACE = "ezdeharj"
     }
-when{changeset('yolo5/.*')}
-    stages {
 
+    stages {
+        when{changeset('yolo5/.*')}
         stage('Authenticate with ECR') {
             steps {
                 script {

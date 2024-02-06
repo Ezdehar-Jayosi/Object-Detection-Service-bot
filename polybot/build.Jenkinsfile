@@ -11,10 +11,10 @@ pipeline {
         CLUSTER_REGION = "us-east-1"
         NAMESPACE = "ezdeharj"
     }
-     when{ changeset('polybot/*') }
+
 
     stages {
-
+        when{ changeset('polybot/*') }
         stage('Authenticate with ECR') {
             steps {
                 script {
