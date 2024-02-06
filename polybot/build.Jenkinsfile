@@ -16,6 +16,7 @@ pipeline {
     stages {
         stage('Authenticate with ECR') {
 
+
             steps {
 
                 script {
