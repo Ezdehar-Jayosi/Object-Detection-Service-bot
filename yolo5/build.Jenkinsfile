@@ -1,16 +1,5 @@
 pipeline {
-    agent any
-
-    environment {
-        IMAGE_TAG = "v${env.BUILD_ID}-${env.BUILD_NUMBER}-${currentBuild.getTimeInMillis()}"
-        AWS_REGION = "us-east-1"
-        ECR_REPOSITORY = '933060838752.dkr.ecr.us-east-1.amazonaws.com'
-        ACCOUNT_ID = '933060838752'
-        KUBE_CONFIG_CRED = 'KUBE_CONFIG_CRED'
-        CLUSTER_NAME = "k8s-main"  // Corrected cluster name
-        CLUSTER_REGION = "us-east-1"
-        NAMESPACE = "ezdeharj"
-    }
+    // ... (rest of your code)
 
     stages {
         stage('Authenticate with ECR') {
@@ -69,10 +58,10 @@ pipeline {
             }
         }
     }
-}
 
-// Function to check if a file with a certain extension has changed in the last commit
-def fileExtensionChanged(fileExtension) {
-    def changedFiles = sh(script: "git diff --name-only HEAD^ HEAD", returnStdout: true).trim()
-    return changedFiles.findAll { it.endsWith(fileExtension) }.size() > 0
+    // Function to check if a file with a certain extension has changed in the last commit
+    def fileExtensionChanged(fileExtension) {
+        def changedFiles = sh(script: "git diff --name-only HEAD^ HEAD", returnStdout: true).trim()
+        return changedFiles.split('\n').any { it.endsWith(fileExtension) }
+    }
 }
