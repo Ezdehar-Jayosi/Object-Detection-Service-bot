@@ -1,19 +1,13 @@
-apiVersion: autoscaling/v2beta2
-kind: HorizontalPodAutoscaler
+apiVersion: v1
+kind: Service
 metadata:
-  name: yolo5-hpa
+  name: yolo5-service
   namespace: ezdeharj
 spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: yolo5-deployment
-  minReplicas: 1
-  maxReplicas: 10
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 50
+  selector:
+    app: yolo5-microservice
+  ports:
+    - protocol: TCP
+      port: 8081 # Match the port the container listens on
+      targetPort: 8081 # Match the container port
+  type: ClusterIP # ClusterIP for internal communication within the cluster
