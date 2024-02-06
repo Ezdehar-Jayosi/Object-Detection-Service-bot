@@ -120,7 +120,7 @@ class ObjectDetectionBot(Bot):
             # Log the exception
             logger.error(f'Error handling message: {e}')
 
-            # Send an error message to the user
+            #    Send an error message to the user
             self.send_text(msg['chat']['id'],
                            'An error occurred while processing your request. Please try again later.')
         finally:
