@@ -13,7 +13,6 @@ pipeline {
     }
 
     stages {
-        when{changeset('yolo5/.*')}
         stage('Authenticate with ECR') {
             steps {
                 script {

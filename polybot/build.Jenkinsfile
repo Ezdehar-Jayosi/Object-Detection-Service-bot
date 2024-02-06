@@ -14,7 +14,6 @@ pipeline {
 
 
     stages {
-        when{ changeset('polybot/*') }
         stage('Authenticate with ECR') {
             steps {
                 script {
