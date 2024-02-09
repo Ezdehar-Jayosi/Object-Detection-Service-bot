@@ -27,7 +27,7 @@ def format_prediction_results(prediction_result):
     # Convert the object counts dictionary to a formatted string
     formatted_results = ", ".join(f"{obj}: {count}" for obj, count in object_counts.items())
 
-    return f" Detected objects: {formatted_results}"
+    return f"Detected objects: {formatted_results}"
 def setup_routes():
     @app.route('/', methods=['GET'])
     def index():
